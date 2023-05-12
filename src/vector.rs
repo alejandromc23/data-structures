@@ -137,3 +137,134 @@ impl<T> Index<usize> for Vector<T> {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_new() {
+        let v: Vector<i32> = Vector::new();
+        assert_eq!(v.len(), 0);
+        assert_eq!(v.capacity(), 0);
+        assert!(v.is_empty());
+    }
+
+    #[test]
+    fn test_push() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        assert_eq!(v.len(), 3);
+        assert_eq!(v.capacity(), 4);
+        assert!(!v.is_empty());
+    }
+
+    #[test]
+    fn test_insert() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        v.insert(1, 4);
+
+        assert_eq!(v.len(), 4);
+        assert_eq!(v.capacity(), 4);
+        assert_eq!(v[0], 1);
+        assert_eq!(v[1], 4);
+        assert_eq!(v[2], 2);
+        assert_eq!(v[3], 3);
+    }
+
+    #[test]
+    fn test_prepend() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        v.prepend(4);
+
+        assert_eq!(v.len(), 4);
+        assert_eq!(v.capacity(), 4);
+        assert_eq!(v[0], 4);
+        assert_eq!(v[1], 1);
+        assert_eq!(v[2], 2);
+        assert_eq!(v[3], 3);
+    }
+
+    #[test]
+    fn test_pop() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        assert_eq!(v.pop(), Some(3));
+        assert_eq!(v.pop(), Some(2));
+        assert_eq!(v.pop(), Some(1));
+        assert_eq!(v.pop(), None);
+    }
+
+    #[test]
+    fn test_remove() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        assert_eq!(v.remove(1), 2);
+        assert_eq!(v.len(), 2);
+        assert_eq!(v.capacity(), 4);
+        assert_eq!(v[0], 1);
+        assert_eq!(v[1], 3);
+    }
+
+    #[test]
+    fn test_index() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        assert_eq!(v[0], 1);
+        assert_eq!(v[1], 2);
+        assert_eq!(v[2], 3);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_index_out_of_bounds() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        v[3];
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_insert_out_of_bounds() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        v.insert(4, 4);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_remove_out_of_bounds() {
+        let mut v = Vector::new();
+        v.push(1);
+        v.push(2);
+        v.push(3);
+
+        v.remove(3);
+    }
+}
