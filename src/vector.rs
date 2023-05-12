@@ -50,20 +50,51 @@ impl<T> Vector<T> {
             self.grow();
         }
 
-        for i in (position..self.len).rev() {
-            unsafe {
-                let current_ptr = self.ptr.add(i + 1);
-                let prev_ptr = self.ptr.add(i);
-                std::ptr::copy_nonoverlapping(prev_ptr, current_ptr, 1);
-            }
+        unsafe {
+            std::ptr::copy(
+                self.ptr.add(position),
+                self.ptr.add(position + 1),
+                self.len - position,
+                );
+
+            std::ptr::write(self.ptr.add(position), item);
+
+            self.len += 1;
+        }
+    }
+
+    pub fn prepend(&mut self, item: T) {
+        self.insert(0, item);
+    }
+
+    pub fn pop(&mut self) -> Option<T> {
+        if self.len == 0 {
+            return None;
+        }
+
+        self.len -= 1;
+        unsafe {
+            Some(std::ptr::read(self.ptr.add(self.len)))
+        }
+    }
+
+    pub fn remove(&mut self, position: usize) -> T {
+        if position >= self.len {
+            panic!("Removal index ({}) is out of bounds len ({})", position, self.len);
         }
 
         unsafe {
-            let ptr = self.ptr.add(position);
-            std::ptr::write(ptr, item);
-        }
+            self.len -= 1;
+            let item = std::ptr::read(self.ptr.add(position));
 
-        self.len += 1;
+            std::ptr::copy(
+                self.ptr.add(position + 1),
+                self.ptr.add(position),
+                self.len - position,
+            );
+            
+            item
+        }
     }
 
     fn grow(&mut self) { 
