@@ -12,18 +12,17 @@ impl<T> Queue<T> {
    }
 
    pub fn enqueue(&mut self, value: T) {
-      self.data.push_back(value);
+      self.data.push_front(value);
    }
 
    pub fn dequeue(&mut self) -> Option<T> {
-      self.data.pop_front()
+      self.data.pop_back()
    }
 
    pub fn is_empty(&self) -> bool {
       self.data.is_empty()
    }
 }
-
 
 #[cfg(test)]
 mod tests {
