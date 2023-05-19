@@ -25,7 +25,7 @@ impl<T> LinkedList<T> {
     }
 
     pub fn push_front(&mut self, value: T) {
-        let mut node = Box::new(Node {
+        let node = Box::new(Node {
             value,
             next: self.head.take(),
         });

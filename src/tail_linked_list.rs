@@ -29,7 +29,7 @@ impl<T> TailLinkedList<T> {
     }
 
     pub fn push_front(&mut self, value: T) {
-        let mut new_node = Box::new(Node {
+        let new_node = Box::new(Node {
             value,
             next: self.head,
         });
